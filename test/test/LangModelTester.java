@@ -28,7 +28,7 @@ public class LangModelTester {
 			/**
 			 * STORE GENERATED N-GRAM LIST
 			 */
-			ioFile.trainResource(Configuration.LM_FILE, Configuration.OVERWRITE_FILE, nGramFreq);
+			ioFile.trainResource(Configuration.NGRAM_FILE, Configuration.OVERWRITE_FILE, nGramFreq);
 			String lastModified = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss")
 					.format(new Date(new File(ioFile.getResource() + Configuration.STEMMED_FILE).lastModified()));
 

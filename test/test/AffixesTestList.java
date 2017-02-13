@@ -17,6 +17,7 @@ public class AffixesTestList {
 		wordStem.put("mag-asawa", "asawa");
 		wordStem.put("magbalik", "balik");
 		wordStem.put("pambansa", "bansa");
+		wordStem.put("papagkatao", "tao");
 		return wordStem;
 
 	}

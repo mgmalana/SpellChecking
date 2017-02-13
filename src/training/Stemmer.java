@@ -1,11 +1,13 @@
 package training;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
+import main.Configuration;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
 
@@ -14,10 +16,12 @@ public class Stemmer {
 	File file = null;
 	private LinkedHashMap<String, String> prefixList = null;
 	private HashMap<String, String> suffixList = null;
+	private Collection<String> prefixListValues = null;
 
 	public Stemmer(Prefixes prefixList, Suffixes suffixList) {
 		this.prefixList = prefixList.getPrefixes();
 		this.suffixList = suffixList.getSuffixes();
+		this.prefixListValues = this.prefixList.values();
 	}
 
 	public Set<String> stemWordList(Set<String> wordList) {
@@ -28,26 +32,26 @@ public class Stemmer {
 
 		return stemmedList;
 	}
-	
 
 	public String stemming(String input) {
 
-		if (input.length() < 4)
+		if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
 			return input;
 
 		for (String pattern : prefixList.keySet()) {
 			String temp = input;
-			if (input.length() < 4)
+			if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
 				return input;
 
 			if (input.matches((pattern))) {
+				System.out.println("pattern: " + prefixList.get(pattern));
 				input = input.replaceFirst(prefixList.get(pattern), "");
 
 			}
 
 			// Return 'yung OLD STRING kapag AFTER STEMMING ay naging less than
-			// 4 ito
-			if (input.length() < 4) {
+			// MINIMUM_WORD_LENGTH ito
+			if (input.length() < Configuration.MINIMUM_WORD_LENGTH) {
 				input = temp;
 			}
 
@@ -55,7 +59,7 @@ public class Stemmer {
 
 		for (String pattern : suffixList.keySet()) {
 
-			if (input.length() < 4)
+			if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
 				return input;
 
 			if (input.matches((pattern))) {
@@ -81,7 +85,7 @@ public class Stemmer {
 
 				// Return 'yung OLD STRING kapag AFTER STEMMING ay naging less
 				// than 4 ito
-				if (input.length() < 4) {
+				if (input.length() <= Configuration.MINIMUM_WORD_LENGTH) {
 					input = temp;
 				}
 
@@ -91,4 +95,12 @@ public class Stemmer {
 		return input;
 	}
 
+	public boolean isPrefix(String prefix) {
+
+		for (String prefixWord : prefixListValues)
+			if (prefix.contains(prefixWord))
+				return true;
+
+		return false;
+	}
 }

@@ -1,16 +1,18 @@
 package test;
 
 public class MainTest {
-	
-	
-	public static void main(String[] args){
-		
+
+	public static void main(String[] args) {
+
+		String input = "ang mga bata na magagaling, na.";
+
 		System.out.println("STEMMER");
-		StemmerTester.testStemmer();
+		 StemmerTester.testStemmer();
 		System.out.println();
 		System.out.println("LANGUAGE MODEL");
-		LangModelTester.testGenerateLangModel();
-		
+		// LangModelTester.testGenerateLangModel();
+		//TokenizeTest.tokenize(input);
+
 	}
 
 }

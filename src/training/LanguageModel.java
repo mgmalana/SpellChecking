@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import main.Configuration;
+
 public class LanguageModel {
 
 	private String fileName = null;
@@ -14,27 +16,27 @@ public class LanguageModel {
 	public LanguageModel(String fileName, int nGram) {
 		this.fileName = fileName;
 
-		if (nGram >= 3 && nGram <= 5)
+		if (nGram >= Configuration.MINIMUM_WORD_LENGTH && nGram <= Configuration.MAXIMUM_WORD_LENGTH)
 			this.nGram = nGram;
 		else {
 			System.out.println("ADJUSTING TO MINUMUM/MAXIMUM VALUE");
-			if (nGram < 3)
-				this.nGram = 3;
+			if (nGram < Configuration.MINIMUM_WORD_LENGTH)
+				this.nGram = Configuration.MINIMUM_WORD_LENGTH;
 			else
-				this.nGram = 5;
+				this.nGram = Configuration.MAXIMUM_WORD_LENGTH;
 		}
 	}
 
 	public LanguageModel(Set<String> stemmedList, int nGram) {
 		this.wordList = stemmedList;
-		if (nGram >= 3 && nGram <= 5)
+		if (nGram >= Configuration.MINIMUM_WORD_LENGTH && nGram <= Configuration.MAXIMUM_WORD_LENGTH)
 			this.nGram = nGram;
 		else {
 			System.out.println("ADJUSTING TO MINUMUM/MAXIMUM VALUE");
-			if (nGram < 3)
-				this.nGram = 3;
+			if (nGram < Configuration.MINIMUM_WORD_LENGTH)
+				this.nGram = Configuration.MINIMUM_WORD_LENGTH;
 			else
-				this.nGram = 5;
+				this.nGram = Configuration.MAXIMUM_WORD_LENGTH;
 		}
 	}
 
@@ -43,6 +45,7 @@ public class LanguageModel {
 
 		HashMap<String, Integer> keyValue = new HashMap<>();
 		Set<String> stemmedList = null;
+		int normalizer = 0;
 
 		if (fileName == null)
 			stemmedList = wordList;
@@ -50,10 +53,11 @@ public class LanguageModel {
 			stemmedList = ioFile.readResource(fileName);
 
 		for (String word : stemmedList) {
-			if (!(word.length() < 3)) {
+			if (!(word.length() < Configuration.MINIMUM_WORD_LENGTH)) {
 				String cWord = "_" + word + "_";
 
 				for (int counter = nGram; counter < word.length() + 1; counter++) {
+					normalizer++;
 					String gram = cWord.substring(counter - nGram, counter);
 
 					if (!keyValue.containsKey(gram))
@@ -64,9 +68,10 @@ public class LanguageModel {
 			}
 		}
 
-		for (String key : keyValue.keySet())
-			nGramFreq.add(key + "\t" + keyValue.get(key));
-
+		for (String key : keyValue.keySet()) {
+			double normalizedScore = (double) keyValue.get(key) / normalizer;
+			nGramFreq.add(key + "\t" + normalizedScore);
+		}
 		return nGramFreq;
 	}
 }
