@@ -1,10 +1,8 @@
 package detector;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.TreeMap;
 
 import main.Configuration;
 import training.IOFile;
@@ -14,7 +12,7 @@ public class NGramStatistics {
 	IOFile ioFile = new IOFile();
 	private int nGram = Configuration.nGram;
 
-	private HashSet<String> nGramList = null;
+	private LinkedHashSet<String> nGramList = null;
 	private Map<String, Double> nGramFreq = null;
 
 	public NGramStatistics(String nGramFile) {
@@ -25,23 +23,25 @@ public class NGramStatistics {
 
 	private void generateNGramFreq() {
 
-		nGramFreq = new HashMap<>();
+		nGramFreq = new LinkedHashMap<>();
 
+		int counter = 0;
+		int topNGram = (int) (Configuration.nGramThreshold * nGramList.size());
 		for (String wordFreq : nGramList) {
+			if (counter > topNGram)
+				break;
 
 			String[] pair = wordFreq.split("\t");
 			nGramFreq.put(pair[0], Double.parseDouble(pair[1]));
+			counter++;
 		}
-		nGramList = null;
+
 	}
-	
 
 	public boolean hasHighNGramStatistics(String word) {
 
 		boolean highNGramStat = true;
-		System.out.println(nGramFreq.size());
 		if (!(word.length() < Configuration.MINIMUM_WORD_LENGTH)) {
-			Double frequency = 0.0;
 
 			String cWord = "_" + word + "_";
 			for (int counter = nGram; counter < word.length() + 1; counter++) {
@@ -51,17 +51,23 @@ public class NGramStatistics {
 					System.out.println("word: " + gram + " in gramFreq " + nGramFreq.containsKey(gram) + " value: "
 							+ nGramFreq.get(gram));
 
-				if (nGramFreq.containsKey(gram)) {
-					frequency = nGramFreq.get(gram);
-					if (frequency < Configuration.nGramThreshold)
-						return false;
-				} else
+				if (!nGramFreq.containsKey(gram)) {
 					return false;
+				}
 			}
 
 		}
 		return highNGramStat;
 	}
+
+	public void displayNGram() {
+		System.out.println("ngramList: " + nGramList.size());
+		System.out.println("ngramFreq: " + nGramFreq.size());
+		int counter = 0;
+		for (String word : nGramFreq.keySet()) {
+			counter++;
+			System.out.println(counter + " last value: " + word + " -  " + nGramFreq.get(word));
+		}
+
+	}
 }
-
-

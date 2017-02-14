@@ -1,5 +1,6 @@
 package main;
 
+import java.security.spec.MGF1ParameterSpec;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
@@ -102,7 +103,6 @@ public class Main {
 
 				// NO WORD IN DICTIONARY: N-GRAM
 				if (!inDictionary) {
-					System.out.println("here");
 					inDictionary = nGramStats.hasHighNGramStatistics(cWord);
 				}
 			}

@@ -1,7 +1,11 @@
 package training;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import main.Configuration;
@@ -12,6 +16,7 @@ public class LanguageModel {
 	private String fileName = null;
 	private int nGram = 0;
 	private Set<String> wordList = null;
+	private int modelSize;
 
 	public LanguageModel(String fileName, int nGram) {
 		this.fileName = fileName;
@@ -45,7 +50,6 @@ public class LanguageModel {
 
 		HashMap<String, Integer> keyValue = new HashMap<>();
 		Set<String> stemmedList = null;
-		int normalizer = 0;
 
 		if (fileName == null)
 			stemmedList = wordList;
@@ -57,7 +61,6 @@ public class LanguageModel {
 				String cWord = "_" + word + "_";
 
 				for (int counter = nGram; counter < word.length() + 1; counter++) {
-					normalizer++;
 					String gram = cWord.substring(counter - nGram, counter);
 
 					if (!keyValue.containsKey(gram))
@@ -67,15 +70,40 @@ public class LanguageModel {
 				}
 			}
 		}
+		modelSize = keyValue.size();
+		LinkedHashMap<String, Integer> sortedMap = sort(keyValue);
 
-		for (String key : keyValue.keySet()) {
-			double normalizedScore = (double) keyValue.get(key) / normalizer;
-			nGramFreq.add(key + "\t" + normalizedScore);
+		for (String key : sortedMap.keySet()) {
+			nGramFreq.add(key + "\t" + sortedMap.get(key));
 		}
 
 		return nGramFreq;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private LinkedHashMap<String, Integer> sort(HashMap<String, Integer> map) {
 
+		LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<>();
+		Object[] a = map.entrySet().toArray();
+		Arrays.sort(a, new Comparator() {
+
+			public int compare(Object o1, Object o2) {
+				return ((Map.Entry<String, Integer>) o2).getValue()
+						.compareTo(((Map.Entry<String, Integer>) o1).getValue());
+			}
+		});
+
+		for (Object e : a) {
+			String x = ((Map.Entry<String, Integer>) e).getKey();
+			int y = ((Map.Entry<String, Integer>) e).getValue();
+			sortedMap.put(x, y);
+		}
+
+		return sortedMap;
+	}
+
+	public int getModelSize() {
+		return modelSize;
+	}
 
 }
