@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import main.Configuration;
@@ -24,8 +25,8 @@ public class Stemmer {
 		this.prefixListValues = this.prefixList.values();
 	}
 
-	public Set<String> stemWordList(Set<String> wordList) {
-		Set<String> stemmedList = new HashSet<>();
+	public LinkedHashSet<String> stemWordList(Set<String> wordList) {
+		LinkedHashSet<String> stemmedList = new LinkedHashSet<>();
 
 		for (String inflected : wordList)
 			stemmedList.add(stemming(inflected));
@@ -44,7 +45,6 @@ public class Stemmer {
 				return input;
 
 			if (input.matches((pattern))) {
-				System.out.println("pattern: " + prefixList.get(pattern));
 				input = input.replaceFirst(prefixList.get(pattern), "");
 
 			}

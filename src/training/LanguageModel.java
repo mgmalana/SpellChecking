@@ -1,16 +1,16 @@
 package training;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import main.Configuration;
 
 public class LanguageModel {
 
-	private String fileName = null;
-	private int nGram;
 	private IOFile ioFile = new IOFile();
+	private String fileName = null;
+	private int nGram = 0;
 	private Set<String> wordList = null;
 
 	public LanguageModel(String fileName, int nGram) {
@@ -40,8 +40,8 @@ public class LanguageModel {
 		}
 	}
 
-	public Set<String> generateNGram() {
-		Set<String> nGramFreq = new HashSet<>();
+	public LinkedHashSet<String> generateNGram() {
+		LinkedHashSet<String> nGramFreq = new LinkedHashSet<>();
 
 		HashMap<String, Integer> keyValue = new HashMap<>();
 		Set<String> stemmedList = null;
@@ -72,6 +72,10 @@ public class LanguageModel {
 			double normalizedScore = (double) keyValue.get(key) / normalizer;
 			nGramFreq.add(key + "\t" + normalizedScore);
 		}
+
 		return nGramFreq;
 	}
+
+
+
 }

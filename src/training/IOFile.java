@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class IOFile {
@@ -35,11 +36,10 @@ public class IOFile {
 			System.out.println("NOT MODIFIED: " + fileName);
 	}
 
-
-	public HashSet<String> readResource(String fileName) {
+	public LinkedHashSet<String> readResource(String fileName) {
 		String filePath = getResource() + fileName;
-		
-		HashSet<String> wordList = new HashSet<>();
+
+		LinkedHashSet<String> wordList = new LinkedHashSet<>();
 		String currentLine = "";
 		try (BufferedReader read = new BufferedReader(new FileReader(filePath))) {
 			while ((currentLine = read.readLine()) != null) {
