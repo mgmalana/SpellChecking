@@ -1,6 +1,7 @@
 package main;
 
 import java.security.spec.MGF1ParameterSpec;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
@@ -15,6 +16,8 @@ import training.LanguageModel;
 import training.Stemmer;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
+import utlity.Configuration;
+import utlity.Logger;
 
 public class Main {
 
@@ -49,12 +52,17 @@ public class Main {
 		DictLookUp dictLookUp = new DictLookUp(engDict, filiDict);
 		NGramStatistics nGramStats = new NGramStatistics(Configuration.NGRAM_FILE);
 
+		Logger log = new Logger();
+		int sentenceNumber = 0;
+
 		// TEST SENTENCE
-		String[] document = new String[1];
-		document[0] = "ang mag-eiders magsdf";
+		ArrayList<String> document = new ArrayList<>();
+		document.add("Ang mga bata na magaganda.");
+		document.add("Sila rin ay bata na magaganda.");
 
 		Tokenizer tokenizer = new Tokenizer();
 		for (String sentence : document) {
+			sentenceNumber++;
 
 			// TOKENIZATION OF INPUT SENTENCES
 			String[] words = tokenizer.tokenize(sentence);
@@ -71,10 +79,6 @@ public class Main {
 
 				// WORD ITSELF: DICTIONARY LOOKUP
 				boolean inDictionary = dictLookUp.checkDict(cWord);
-
-				// NEXT WORD IF THE cWord IS FOUND IN THE DICTIONARY
-				if (inDictionary)
-					continue;
 
 				// CODE-SWTICHING CASE: GET THE STEM OF THE WORD AND DICTIONARY
 				// LOOK-UP
@@ -105,8 +109,13 @@ public class Main {
 				if (!inDictionary) {
 					inDictionary = nGramStats.hasHighNGramStatistics(cWord);
 				}
+
+				if (Configuration.LOGGER)
+					log.log(sentenceNumber, cWord, inDictionary);
 			}
 		}
+
+		ioFile.trainResource(Configuration.LOG_FILE, Configuration.OVERWRITE_FILE, log.getLog());
 	}
 
 }

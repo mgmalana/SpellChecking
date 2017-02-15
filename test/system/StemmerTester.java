@@ -1,4 +1,4 @@
-package test;
+package system;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
-import main.Configuration;
 import training.IOFile;
 import training.Stemmer;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
+import utlity.Configuration;
 
 public class StemmerTester {
 

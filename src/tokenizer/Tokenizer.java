@@ -9,7 +9,7 @@ public class Tokenizer {
 		for (String mark : delimiters)
 			input = input.replace(mark, " " + mark);
 
-		return input.split(" ");
+		return input.toLowerCase().split(" ");
 	}
 
 	public boolean isDelimeters(String word) {

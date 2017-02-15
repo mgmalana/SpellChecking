@@ -1,0 +1,17 @@
+
+1-------S-E-N-T-E-N-C-E-------
+-------S-E-N-T-E-N-C-E-------1
+1:  word(1): ang true
+1:  word(2): mga true
+1:  word(3): bata true
+1:  word(4): na true
+1:  word(5): magaganda true
+
+2-------S-E-N-T-E-N-C-E-------
+-------S-E-N-T-E-N-C-E-------2
+2:  word(6): sila true
+2:  word(7): rin true
+2:  word(8): ay true
+2:  word(9): bata true
+2:  word(10): na true
+2:  word(11): magaganda true

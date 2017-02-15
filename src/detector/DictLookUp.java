@@ -2,7 +2,7 @@ package detector;
 
 import com.BoxOfC.MDAG.MDAG;
 
-import main.Configuration;
+import utlity.Configuration;
 
 public class DictLookUp {
 

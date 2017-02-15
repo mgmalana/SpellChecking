@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import main.Configuration;
+import utlity.Configuration;
 
 public class LanguageModel {
 

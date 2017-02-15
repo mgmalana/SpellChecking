@@ -4,8 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import main.Configuration;
 import training.IOFile;
+import utlity.Configuration;
 
 public class NGramStatistics {
 

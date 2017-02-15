@@ -1,13 +1,13 @@
-package test;
+package system;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
-import main.Configuration;
 import training.IOFile;
 import training.LanguageModel;
+import utlity.Configuration;
 
 public class LangModelTester {
 

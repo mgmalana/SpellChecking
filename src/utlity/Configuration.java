@@ -1,4 +1,4 @@
-package main;
+package utlity;
 
 public class Configuration {
 
@@ -15,5 +15,7 @@ public class Configuration {
 	public final static boolean OVERWRITE_FILE = true;
 
 	public final static boolean VERBOSE = false;
+	public final static String LOG_FILE = "log.txt";
+	public final static boolean LOGGER = true;
 
 }

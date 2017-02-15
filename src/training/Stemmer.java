@@ -8,9 +8,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import main.Configuration;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
+import utlity.Configuration;
 
 public class Stemmer {
 
