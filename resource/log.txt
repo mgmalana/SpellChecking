@@ -9,9 +9,9 @@
 
 2-------S-E-N-T-E-N-C-E-------
 -------S-E-N-T-E-N-C-E-------2
-2:  word(6): sila true
-2:  word(7): rin true
-2:  word(8): ay true
-2:  word(9): bata true
-2:  word(10): na true
-2:  word(11): magaganda true
+2:  word(6): makulit true
+2:  word(7): na true
+2:  word(8): bata true
+2:  word(9): ang true
+2:  word(10): mga true
+2:  word(11): ito true

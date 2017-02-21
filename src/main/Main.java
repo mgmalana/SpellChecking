@@ -58,7 +58,7 @@ public class Main {
 		// TEST SENTENCE
 		ArrayList<String> document = new ArrayList<>();
 		document.add("Ang mga bata na magaganda.");
-		document.add("Sila rin ay bata na magaganda.");
+		document.add("Makulit na bata ang mga ito.");
 
 		Tokenizer tokenizer = new Tokenizer();
 		for (String sentence : document) {
@@ -116,6 +116,7 @@ public class Main {
 		}
 
 		ioFile.trainResource(Configuration.LOG_FILE, Configuration.OVERWRITE_FILE, log.getLog());
+		System.out.println("done");
 	}
 
 }
