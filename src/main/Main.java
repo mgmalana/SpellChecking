@@ -1,12 +1,13 @@
 package main;
 
-import java.security.spec.MGF1ParameterSpec;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 
+import com.BoxOfC.LevenshteinAutomaton.LevenshteinAutomaton;
 import com.BoxOfC.MDAG.MDAG;
 
+import corrector.MergeCorrection;
+import corrector.SplitCorrection;
 import detector.DictLookUp;
 import detector.NGramStatistics;
 import tokenizer.Tokenizer;
@@ -14,6 +15,8 @@ import training.DAWG;
 import training.IOFile;
 import training.LanguageModel;
 import training.Stemmer;
+import training.affixes.Infixes;
+import training.affixes.PartialReduplication;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
 import utlity.Configuration;
@@ -23,10 +26,21 @@ public class Main {
 
 	public static void main(String[] args) {
 		IOFile ioFile = new IOFile();
+		Stemmer stemmer = null;
+
 		Prefixes prefixList = new Prefixes();
 		Suffixes suffixList = new Suffixes();
-		Stemmer stemmer = new Stemmer(prefixList, suffixList);
 
+		Infixes infixList = null;
+		PartialReduplication redupRuleList = null;
+
+		if (Configuration.LIGHT_STEMMER)
+			stemmer = new Stemmer(prefixList, suffixList);
+		else {
+			infixList = new Infixes();
+			redupRuleList = new PartialReduplication();
+			stemmer = new Stemmer(prefixList, suffixList, infixList, redupRuleList);
+		}
 		// GET FILIPINO DICT
 		LinkedHashSet<String> dictionary = ioFile.readResource(Configuration.FILIPINO_DICT);
 
@@ -52,13 +66,20 @@ public class Main {
 		DictLookUp dictLookUp = new DictLookUp(engDict, filiDict);
 		NGramStatistics nGramStats = new NGramStatistics(Configuration.NGRAM_FILE);
 
-		Logger log = new Logger();
+		// ERROR CORRECTION VARIABLES
+		SplitCorrection splitCorrector = new SplitCorrection(filiDict);
+		MergeCorrection mergeCorrector = new MergeCorrection(stemmer);
+		LinkedHashSet<String> candidateSuggestions = null;
+
+		Logger logger = new Logger();
 		int sentenceNumber = 0;
 
 		// TEST SENTENCE
 		ArrayList<String> document = new ArrayList<>();
-		document.add("Ang mga bata na magaganda.");
-		document.add("Makulit na bata ang mga ito.");
+		document.add("Ang mga bata na magaganda.*#");
+		document.add("Sila rin ay bata na magaganda.*#");
+		document.add("mag laro ay palang na magaganda.*#");
+		document.add("Mg-texts laro Magelan ay magagandangbabae na magaganda.*#");
 
 		Tokenizer tokenizer = new Tokenizer();
 		for (String sentence : document) {
@@ -67,15 +88,27 @@ public class Main {
 			// TOKENIZATION OF INPUT SENTENCES
 			String[] words = tokenizer.tokenize(sentence);
 
-			for (int counter = 0; counter < words.length; counter++) {
+			// words.length-1 = remove the marker '*#'
+			for (int wordCounter = 0; wordCounter < words.length - 1; wordCounter++) {
 
 				// GET CURRENT WORD IN THE SENTENCE
-				String cWord = words[counter];
-				String word = "";
-
+				String cWord = words[wordCounter];
+				candidateSuggestions = new LinkedHashSet<>();
+				
 				// SKIP IF THE WORD IS A PUNCTUATION MARKS
-				if (tokenizer.isDelimeters(cWord))
+				if (tokenizer.isDelimeters(cWord) || tokenizer.isProperNoun(cWord)) {
+					if (Configuration.LOGGER) {
+						
+						candidateSuggestions.add("Delimeter / ProperNoun");
+						logger.log(sentenceNumber, sentence, cWord, false, candidateSuggestions);
+					}
 					continue;
+				}
+				// ---------------
+				// ---------------
+				// ERROR DETECTION
+				// ---------------
+				// ---------------
 
 				// WORD ITSELF: DICTIONARY LOOKUP
 				boolean inDictionary = dictLookUp.checkDict(cWord);
@@ -90,7 +123,10 @@ public class Main {
 					boolean isEngWord = dictLookUp.checkEngDict(codeSwitchWord[1]);
 
 					if (isEngWord && !isPrefix) {
-						System.out.println("Wrong prefix of the word");
+						if (Configuration.LOGGER) {
+							candidateSuggestions.add("Wrong prefix of the word");
+							logger.log(sentenceNumber, sentence, cWord, inDictionary, candidateSuggestions);
+						}
 						continue;
 					}
 					inDictionary = (isPrefix && isEngWord);
@@ -100,23 +136,47 @@ public class Main {
 				// LOOK-UP
 				if (!inDictionary) {
 					// STEM OF THE FILIPINO WORD
-					word = stemmer.stemming(cWord);
+					String word = stemmer.stemming(cWord);
 					inDictionary = dictLookUp.checkFiliDict(word);
-
 				}
 
 				// NO WORD IN DICTIONARY: N-GRAM
-				if (!inDictionary) {
+				if (!inDictionary && !stemmer.isPrefix(cWord)) {
 					inDictionary = nGramStats.hasHighNGramStatistics(cWord);
 				}
 
+				// ---------------
+				// ---------------
+				// ERROR CORRECTION FOR
+				// THE MISPPLED WORD
+				// ---------------
+				// ---------------
+
+				String nWord = words[wordCounter + 1];
+				
+				if (!inDictionary) {
+					// SPLIT CORRECTION
+					candidateSuggestions = splitCorrector.splitSuggestion(cWord);
+
+					// MERGE CORRECTION
+					String mergeCorrectionSuggestion = mergeCorrector.setConsecutiveWords(cWord, nWord);
+					if (!mergeCorrectionSuggestion.equals("")) {
+						wordCounter++;
+						candidateSuggestions.add(mergeCorrectionSuggestion);
+					}
+
+					// AUTOMATON CORRECTION
+					if (candidateSuggestions.size() == 0) {
+						candidateSuggestions.addAll(LevenshteinAutomaton.iterativeFuzzySearch(2, cWord, filiDict));
+					}
+				}
+
 				if (Configuration.LOGGER)
-					log.log(sentenceNumber, cWord, inDictionary);
+					logger.log(sentenceNumber, sentence, cWord, inDictionary, candidateSuggestions);
 			}
 		}
 
-		ioFile.trainResource(Configuration.LOG_FILE, Configuration.OVERWRITE_FILE, log.getLog());
-		System.out.println("done");
+		ioFile.trainResource(Configuration.LOG_FILE, Configuration.OVERWRITE_FILE, logger.getLog());
 	}
 
 }

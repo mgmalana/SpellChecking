@@ -1,17 +1,39 @@
 
 1-------S-E-N-T-E-N-C-E-------
--------S-E-N-T-E-N-C-E-------1
-1:  word(1): ang true
-1:  word(2): mga true
-1:  word(3): bata true
-1:  word(4): na true
-1:  word(5): magaganda true
+Ang mga bata na magaganda.*#
+1:  word(1): ang true 
+1:  word(2): mga true 
+1:  word(3): bata true 
+1:  word(4): na true 
+1:  word(5): magaganda true 
+1:  word(6): . false [Delimeter / ProperNoun, ]
 
 2-------S-E-N-T-E-N-C-E-------
--------S-E-N-T-E-N-C-E-------2
-2:  word(6): makulit true
-2:  word(7): na true
-2:  word(8): bata true
-2:  word(9): ang true
-2:  word(10): mga true
-2:  word(11): ito true
+Sila rin ay bata na magaganda.*#
+2:  word(7): sila true 
+2:  word(8): rin true 
+2:  word(9): ay true 
+2:  word(10): bata true 
+2:  word(11): na true 
+2:  word(12): magaganda true 
+2:  word(13): . false [Delimeter / ProperNoun, ]
+
+3-------S-E-N-T-E-N-C-E-------
+mag laro ay palang na magaganda.*#
+3:  word(14): mag false [maglaro, ]
+3:  word(15): ay true 
+3:  word(16): palang true 
+3:  word(17): na true 
+3:  word(18): magaganda true 
+3:  word(19): . false [Delimeter / ProperNoun, ]
+
+4-------S-E-N-T-E-N-C-E-------
+Mg-texts laro Magelan ay magagandangbabae na magaganda.*#
+4:  word(20): mg-texts false [Wrong prefix of the word, ]
+4:  word(21): laro true 
+4:  word(22): Magelan false [Delimeter / ProperNoun, ]
+4:  word(23): ay true 
+4:  word(24): magagandangbabae false [magagandang babae, ]
+4:  word(25): na true 
+4:  word(26): magaganda true 
+4:  word(27): . false [Delimeter / ProperNoun, ]
