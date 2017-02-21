@@ -1,8 +1,6 @@
 package main;
 
-import java.security.spec.MGF1ParameterSpec;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import com.BoxOfC.MDAG.MDAG;
@@ -14,6 +12,8 @@ import training.DAWG;
 import training.IOFile;
 import training.LanguageModel;
 import training.Stemmer;
+import training.affixes.Infixes;
+import training.affixes.PartialReduplication;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
 import utlity.Configuration;
@@ -23,10 +23,21 @@ public class Main {
 
 	public static void main(String[] args) {
 		IOFile ioFile = new IOFile();
+		Stemmer stemmer = null;
+
 		Prefixes prefixList = new Prefixes();
 		Suffixes suffixList = new Suffixes();
-		Stemmer stemmer = new Stemmer(prefixList, suffixList);
 
+		Infixes infixList = null;
+		PartialReduplication redupRuleList = null;
+
+		if (Configuration.LIGHT_STEMMER)
+			stemmer = new Stemmer(prefixList, suffixList);
+		else {
+			infixList = new Infixes();
+			redupRuleList = new PartialReduplication();
+			stemmer = new Stemmer(prefixList, suffixList, infixList, redupRuleList);
+		}
 		// GET FILIPINO DICT
 		LinkedHashSet<String> dictionary = ioFile.readResource(Configuration.FILIPINO_DICT);
 
@@ -57,8 +68,8 @@ public class Main {
 
 		// TEST SENTENCE
 		ArrayList<String> document = new ArrayList<>();
-		document.add("Ang mga bata na magaganda.");
-		document.add("Sila rin ay bata na magaganda.");
+		document.add("Ang mga bata na magaganda.*#");
+		document.add("Sila rin ay bata na magaganda.*#");
 
 		Tokenizer tokenizer = new Tokenizer();
 		for (String sentence : document) {
@@ -66,8 +77,9 @@ public class Main {
 
 			// TOKENIZATION OF INPUT SENTENCES
 			String[] words = tokenizer.tokenize(sentence);
-
-			for (int counter = 0; counter < words.length; counter++) {
+			
+			// words.length-1 = remove the marker '*#' 
+			for (int counter = 0; counter < words.length - 1; counter++) {
 
 				// GET CURRENT WORD IN THE SENTENCE
 				String cWord = words[counter];
@@ -102,7 +114,6 @@ public class Main {
 					// STEM OF THE FILIPINO WORD
 					word = stemmer.stemming(cWord);
 					inDictionary = dictLookUp.checkFiliDict(word);
-
 				}
 
 				// NO WORD IN DICTIONARY: N-GRAM

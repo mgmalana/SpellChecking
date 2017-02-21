@@ -2,6 +2,8 @@ package training.affixes;
 
 import java.util.LinkedHashMap;
 
+import utlity.Configuration;
+
 public class Prefixes {
 
 	private final String vowel = "[aeiou].*";
@@ -9,246 +11,270 @@ public class Prefixes {
 
 	private final String assimilation_ng_to_n = "[dlrst].*";
 	private final String assimilation_ng_to_m = "[bp].*";
-	LinkedHashMap<String, String> pattern = null;
+	LinkedHashMap<String, String> patternReplace = null;
 
 	public Prefixes() {
-		pattern = new LinkedHashMap<String, String>();
+		patternReplace = new LinkedHashMap<String, String>();
 
-		pattern.put("^pakikipag-" + vowel, "pakikipag-");
-		pattern.put("^pakikipag" + consonant, "pakikipag");
+		patternReplace.put("^pakikipag-" + vowel, "pakikipag-");
+		patternReplace.put("^pakikipag" + consonant, "pakikipag");
 
-		pattern.put("^pagpapaka", "pagpapaka");
-		pattern.put("^nakipagsa", "nakipagsa");
-		pattern.put("^nakapagpa", "nakapagpa");
+		patternReplace.put("^pagpapaka", "pagpapaka");
+		patternReplace.put("^nakipagsa", "nakipagsa");
+		patternReplace.put("^nakapagpa", "nakapagpa");
 
-		pattern.put("^maipapang-" + vowel, "maipapang-");
-		pattern.put("^maipapan" + assimilation_ng_to_n, "maipapan");
-		pattern.put("^maipapam" + assimilation_ng_to_m, "maipapam");
-		pattern.put("^maipapang" + consonant, "maipapang");
+		patternReplace.put("^maipapang-" + vowel, "maipapang-");
+		patternReplace.put("^maipapan" + assimilation_ng_to_n, "maipapan");
+		patternReplace.put("^maipapam" + assimilation_ng_to_m, "maipapam");
+		patternReplace.put("^maipapang" + consonant, "maipapang");
 
-		pattern.put("^magkasing-" + vowel, "magkasing-");
-		pattern.put("^magkasin" + assimilation_ng_to_n, "magkasin");
-		pattern.put("^magkasim" + assimilation_ng_to_m, "magkasim");
-		pattern.put("^magkasing" + consonant, "magkasing");
+		patternReplace.put("^magkasing-" + vowel, "magkasing-");
+		patternReplace.put("^magkasin" + assimilation_ng_to_n, "magkasin");
+		patternReplace.put("^magkasim" + assimilation_ng_to_m, "magkasim");
+		patternReplace.put("^magkasing" + consonant, "magkasing");
 
-		pattern.put("^nasipang-" + vowel, "nasipang-");
-		pattern.put("^nasipan" + assimilation_ng_to_n, "nasipan");
-		pattern.put("^nasipam" + assimilation_ng_to_m, "nasipam");
-		pattern.put("^nasipang" + consonant, "nasipang");
+		patternReplace.put("^nasipang-" + vowel, "nasipang-");
+		patternReplace.put("^nasipan" + assimilation_ng_to_n, "nasipan");
+		patternReplace.put("^nasipam" + assimilation_ng_to_m, "nasipam");
+		patternReplace.put("^nasipang" + consonant, "nasipang");
 
-		pattern.put("^nakapang-" + vowel, "nakapang-");
-		pattern.put("^nakapan" + assimilation_ng_to_n, "nakapan");
-		pattern.put("^nakapam" + assimilation_ng_to_m, "nakapam");
-		pattern.put("^nakapang" + consonant, "nakapang");
+		patternReplace.put("^nakapang-" + vowel, "nakapang-");
+		patternReplace.put("^nakapan" + assimilation_ng_to_n, "nakapan");
+		patternReplace.put("^nakapam" + assimilation_ng_to_m, "nakapam");
+		patternReplace.put("^nakapang" + consonant, "nakapang");
 
-		pattern.put("^makapang-" + vowel, "makapang-");
-		pattern.put("^makapan" + assimilation_ng_to_n, "makapan");
-		pattern.put("^makapam" + assimilation_ng_to_m, "makapam");
-		pattern.put("^makapang" + consonant, "makapang");
+		patternReplace.put("^makapang-" + vowel, "makapang-");
+		patternReplace.put("^makapan" + assimilation_ng_to_n, "makapan");
+		patternReplace.put("^makapam" + assimilation_ng_to_m, "makapam");
+		patternReplace.put("^makapang" + consonant, "makapang");
 
-		pattern.put("^maipagpa.*", "maipagpa");
+		patternReplace.put("^maipagpa.*", "maipagpa");
 
-		pattern.put("^magsipag-" + vowel, "magsipag-");
-		pattern.put("^magsipag" + consonant, "magsipag");
+		patternReplace.put("^magsipag-" + vowel, "magsipag-");
+		patternReplace.put("^magsipag" + consonant, "magsipag");
 
-		pattern.put("^magkanda", "magkanda");
-		pattern.put("^ikapagpa", "ikapagpa");
+		patternReplace.put("^magkanda", "magkanda");
+		patternReplace.put("^ikapagpa", "ikapagpa");
 
-		pattern.put("^tagapag-" + vowel, "tagapag-");
-		pattern.put("^tagapag" + consonant, "tagapag");
+		patternReplace.put("^tagapag-" + vowel, "tagapag-");
+		patternReplace.put("^tagapag" + consonant, "tagapag");
 
-		pattern.put("^pagkaka.*", "pagkaka");
-		pattern.put("^pagpapa.*", "pagpapa");
-		pattern.put("^papagka.*", "papagka");
+		patternReplace.put("^pagkaka.*", "pagkaka");
+		patternReplace.put("^pagpapa.*", "pagpapa");
+		patternReplace.put("^papagka.*", "papagka");
 
-		pattern.put("^nakipag-" + vowel, "nakipag-");
-		pattern.put("^nakipag" + consonant, "nakipag");
+		patternReplace.put("^nakipag-" + vowel, "nakipag-");
+		patternReplace.put("^nakipag" + consonant, "nakipag");
 
-		pattern.put("^nakapag-" + vowel, "nakapag-");
-		pattern.put("^nakapag" + consonant, "nakapag");
+		patternReplace.put("^nakapag-" + vowel, "nakapag-");
+		patternReplace.put("^nakapag" + consonant, "nakapag");
 
-		pattern.put("^nagpaka.*", "nagpaka");
+		patternReplace.put("^nagpaka.*", "nagpaka");
 
-		pattern.put("^mapapag-" + vowel, "mapapag-");
-		pattern.put("^mapapag" + consonant, "mapapag");
+		patternReplace.put("^mapapag-" + vowel, "mapapag-");
+		patternReplace.put("^mapapag" + consonant, "mapapag");
 
-		pattern.put("^mangaka.*", "mangaka");
-		pattern.put("^mapagpa.*", "mapagpa");
+		patternReplace.put("^mangaka.*", "mangaka");
+		patternReplace.put("^mapagpa.*", "mapagpa");
 
-		pattern.put("^makipag-" + vowel, "makipag-");
-		pattern.put("^makipag" + consonant, "makipag");
+		patternReplace.put("^pinapapag-" + vowel, "pinapapag-");
+		patternReplace.put("^pinapapag" + consonant, "pinapapag");
+		
+		patternReplace.put("^pinapag-" + vowel, "pinapag-");
+		patternReplace.put("^pinapag" + consonant, "pinapag");
+		
+		patternReplace.put("^makikipag-" + vowel, "makikipag-");
+		patternReplace.put("^makikipag" + consonant, "makikipag");
+		
+		patternReplace.put("^makipag-" + vowel, "makipag-");
+		patternReplace.put("^makipag" + consonant, "makipag");
 
-		pattern.put("^makapag-" + vowel, "makapag-");
-		pattern.put("^makapag" + consonant, "makapag");
+		patternReplace.put("^maka(ka)?+pag-" + vowel, "maka(ka)?+pag-");
+		patternReplace.put("^maka(ka)?+pag" + consonant, "maka(ka)?+pag");
 
-		pattern.put("^maipang-" + vowel, "maipang-");
-		pattern.put("^maipan" + assimilation_ng_to_n, "maipan");
-		pattern.put("^maipam" + assimilation_ng_to_m, "maipam");
-		pattern.put("^maipang" + consonant, "maipang");
+		patternReplace.put("^maipang-" + vowel, "maipang-");
+		patternReplace.put("^maipan" + assimilation_ng_to_n, "maipan");
+		patternReplace.put("^maipam" + assimilation_ng_to_m, "maipam");
+		patternReplace.put("^maipang" + consonant, "maipang");
 
-		pattern.put("^magpaka.*", "magpaka");
+		patternReplace.put("^magpaka.*", "magpaka");
 
-		pattern.put("^magkang-" + vowel, "magkang-");
-		pattern.put("^magkan" + assimilation_ng_to_n, "magkan");
-		pattern.put("^magkam" + assimilation_ng_to_m, "magkam");
-		pattern.put("^magkang" + consonant, "magkang");
+		patternReplace.put("^magkang-" + vowel, "magkang-");
+		patternReplace.put("^magkan" + assimilation_ng_to_n, "magkan");
+		patternReplace.put("^magkam" + assimilation_ng_to_m, "magkam");
+		patternReplace.put("^magkang" + consonant, "magkang");
 
-		pattern.put("^ipapang-" + vowel, "ipapang-");
-		pattern.put("^ipapan" + assimilation_ng_to_n, "ipapan");
-		pattern.put("^ipapam" + assimilation_ng_to_m, "ipapam");
-		pattern.put("^ipapang" + consonant, "ipapang");
+		patternReplace.put("^ipapang-" + vowel, "ipapang-");
+		patternReplace.put("^ipapan" + assimilation_ng_to_n, "ipapan");
+		patternReplace.put("^ipapam" + assimilation_ng_to_m, "ipapam");
+		patternReplace.put("^ipapang" + consonant, "ipapang");
 
-		pattern.put("^ikapang-" + vowel, "ikapang-");
-		pattern.put("^ikapan" + assimilation_ng_to_n, "ikapan");
-		pattern.put("^ikapam" + assimilation_ng_to_m, "ikapam");
-		pattern.put("^ikapang" + consonant, "ikapang");
+		patternReplace.put("^ikapang-" + vowel, "ikapang-");
+		patternReplace.put("^ikapan" + assimilation_ng_to_n, "ikapan");
+		patternReplace.put("^ikapam" + assimilation_ng_to_m, "ikapam");
+		patternReplace.put("^ikapang" + consonant, "ikapang");
 
-		pattern.put("^papang-" + vowel, "papang-");
-		pattern.put("^papan" + assimilation_ng_to_n, "papan");
-		pattern.put("^papam" + assimilation_ng_to_m, "papam");
-		pattern.put("^papang" + consonant, "papang");
+		patternReplace.put("^papang-" + vowel, "papang-");
+		patternReplace.put("^papan" + assimilation_ng_to_n, "papan");
+		patternReplace.put("^papam" + assimilation_ng_to_m, "papam");
+		patternReplace.put("^papang" + consonant, "papang");
 
-		pattern.put("^nakaka.*", "nakaka");
-		pattern.put("^napaka.*", "napaka");
-		pattern.put("^pakiki.*", "pakiki");
+		patternReplace.put("^nakaka.*", "nakaka");
+		patternReplace.put("^napaka.*", "napaka");
+		patternReplace.put("^pakiki.*", "pakiki");
 
-		pattern.put("^naipag-" + vowel, "naipag-");
-		pattern.put("^naipag" + consonant, "naipag");
+		patternReplace.put("^naipag-" + vowel, "naipag-");
+		patternReplace.put("^naipag" + consonant, "naipag");
 
-		pattern.put("^naging-" + vowel, "naging-");
-		pattern.put("^nagin" + assimilation_ng_to_n, "nagin");
-		pattern.put("^nagim" + assimilation_ng_to_m, "nagim");
-		pattern.put("^naging" + consonant, "naging");
+		patternReplace.put("^naging-" + vowel, "naging-");
+		patternReplace.put("^nagin" + assimilation_ng_to_n, "nagin");
+		patternReplace.put("^nagim" + assimilation_ng_to_m, "nagim");
+		patternReplace.put("^naging" + consonant, "naging");
 
-		pattern.put("^mapang-" + vowel, "mapang-");
-		pattern.put("^mapan" + assimilation_ng_to_n, "mapan");
-		pattern.put("^mapam" + assimilation_ng_to_m, "mapam");
-		pattern.put("^mapang" + consonant, "mapang");
+		patternReplace.put("^mapang-" + vowel, "mapang-");
+		patternReplace.put("^mapan" + assimilation_ng_to_n, "mapan");
+		patternReplace.put("^mapam" + assimilation_ng_to_m, "mapam");
+		patternReplace.put("^mapang" + consonant, "mapang");
 
-		pattern.put("^kasing-" + vowel, "kasing-");
-		pattern.put("^kasin" + assimilation_ng_to_n, "kasin");
-		pattern.put("^kasim" + assimilation_ng_to_m, "kasim");
-		pattern.put("^kasing" + consonant, "kasing");
+		patternReplace.put("^kasing-" + vowel, "kasing-");
+		patternReplace.put("^kasin" + assimilation_ng_to_n, "kasin");
+		patternReplace.put("^kasim" + assimilation_ng_to_m, "kasim");
+		patternReplace.put("^kasing" + consonant, "kasing");
 
-		pattern.put("^maging-" + vowel, "maging-");
-		pattern.put("^magin" + assimilation_ng_to_n, "magin");
-		pattern.put("^magim" + assimilation_ng_to_m, "magim");
-		pattern.put("^maging" + consonant, "maging");
+		patternReplace.put("^maging-" + vowel, "maging-");
+		patternReplace.put("^magin" + assimilation_ng_to_n, "magin");
+		patternReplace.put("^magim" + assimilation_ng_to_m, "magim");
+		patternReplace.put("^maging" + consonant, "maging");
 
-		pattern.put("^maipag-" + vowel, "maipag-");
-		pattern.put("^maipag" + consonant, "maipag");
+		patternReplace.put("^maipag-" + vowel, "maipag-");
+		patternReplace.put("^maipag" + consonant, "maipag");
 
-		pattern.put("^mangag-" + vowel, "mangag-");
-		pattern.put("^mangag" + consonant, "mangag");
+		patternReplace.put("^mangag-" + vowel, "mangag-");
+		patternReplace.put("^mangag" + consonant, "mangag");
 
-		pattern.put("^ipagka.*", "ipagka");
+		patternReplace.put("^ipagka.*", "ipagka");
 
-		pattern.put("^ikapag-" + vowel, "ikapag-");
-		pattern.put("^ikapag" + consonant, "ikapag");
+		patternReplace.put("^ikapag-" + vowel, "ikapag-");
+		patternReplace.put("^ikapag" + consonant, "ikapag");
 
-		pattern.put("^papag-" + vowel, "papag-");
-		pattern.put("^papag" + consonant, "papag");
+		patternReplace.put("^papag-" + vowel, "papag-");
+		patternReplace.put("^papag" + consonant, "papag");
 
-		pattern.put("^nagpa.*", "nagpa");
-		pattern.put("^nagsa.*", "nagsa");
-		pattern.put("^naipa.*", "naipa");
-		pattern.put("^pagka.*", "pagka");
-		pattern.put("^pagpa.*", "pagpa");
+		patternReplace.put("^nagpa.*", "nagpa");
+		patternReplace.put("^nagsa.*", "nagsa");
+		patternReplace.put("^naipa.*", "naipa");
+		patternReplace.put("^pagka.*", "pagka");
+		patternReplace.put("^pagpa.*", "pagpa");
 
-		pattern.put("^mapag-" + vowel, "mapag-");
-		pattern.put("^mapag" + consonant, "mapag");
+		patternReplace.put("^mapag-" + vowel, "mapag-");
+		patternReplace.put("^mapag" + consonant, "mapag");
 
-		pattern.put("^magka.*", "magka");
-		pattern.put("^magpa.*", "magpa");
-		pattern.put("^magsa.*", "magsa");
-		pattern.put("^magsi.*", "magsi");
-		pattern.put("^maipa.*", "maipa");
-		pattern.put("^manga.*", "manga");
+		patternReplace.put("^pinag-" + vowel, "pinag-");
+		patternReplace.put("^pinag" + consonant, "pinag");
 
-		pattern.put("^ipang-" + vowel, "ipang-");
-		pattern.put("^ipan" + assimilation_ng_to_n, "ipan");
-		pattern.put("^ipam" + assimilation_ng_to_m, "ipam");
-		pattern.put("^ipang" + consonant, "ipang");
+		patternReplace.put("^magka.*", "magka");
+		patternReplace.put("^magpa.*", "magpa");
+		patternReplace.put("^magsa.*", "magsa");
+		patternReplace.put("^magsi.*", "magsi");
+		patternReplace.put("^maipa.*", "maipa");
+		patternReplace.put("^manga.*", "manga");
 
-		pattern.put("^ikina.*", "ikina");
-		pattern.put("^ipaki.*", "ipaki");
-		pattern.put("^taga-.*", "taga-");
-		pattern.put("^tala.*", "tala");
+		patternReplace.put("^ipang-" + vowel, "ipang-");
+		patternReplace.put("^ipan" + assimilation_ng_to_n, "ipan");
+		patternReplace.put("^ipam" + assimilation_ng_to_m, "ipam");
+		patternReplace.put("^ipang" + consonant, "ipang");
 
-		pattern.put("^sang-" + vowel, "sang-");
-		pattern.put("^san" + assimilation_ng_to_n, "san");
-		pattern.put("^sam" + assimilation_ng_to_m, "sam");
-		pattern.put("^sang" + consonant, "sang");
+		patternReplace.put("^ikina.*", "ikina");
+		patternReplace.put("^ipaki.*", "ipaki");
+		patternReplace.put("^taga-.*", "taga-");
+		patternReplace.put("^tala.*", "tala");
 
-		pattern.put("^sing-" + vowel, "sing-");
-		pattern.put("^sin" + assimilation_ng_to_n, "sin");
-		pattern.put("^sim" + assimilation_ng_to_m, "sim");
-		pattern.put("^sing" + consonant, "sing");
+		patternReplace.put("^sang-" + vowel, "sang-");
+		patternReplace.put("^san" + assimilation_ng_to_n, "san");
+		patternReplace.put("^sam" + assimilation_ng_to_m, "sam");
+		patternReplace.put("^sang" + consonant, "sang");
 
-		pattern.put("^pina.*", "pina");
-		pattern.put("^puma.*", "puma");
+		patternReplace.put("^sing-" + vowel, "sing-");
+		patternReplace.put("^sin" + assimilation_ng_to_n, "sin");
+		patternReplace.put("^sim" + assimilation_ng_to_m, "sim");
+		patternReplace.put("^sing" + consonant, "sing");
 
-		pattern.put("^pang-" + vowel, "pang-");
-		pattern.put("^pan" + assimilation_ng_to_n, "pan");
-		pattern.put("^pam" + assimilation_ng_to_m, "pam");
-		pattern.put("^pang" + consonant, "pang");
+		patternReplace.put("^pina.*", "pina");
+		patternReplace.put("^puma.*", "puma");
 
-		pattern.put("^napa.*", "napa");
-		pattern.put("^paka.*", "paka");
-		pattern.put("^paki.*", "paki");
-		pattern.put("^pala.*", "pala");
+		patternReplace.put("^pang-" + vowel, "pang-");
+		patternReplace.put("^pan" + assimilation_ng_to_n, "pan");
+		patternReplace.put("^pam" + assimilation_ng_to_m, "pam");
+		patternReplace.put("^pang" + consonant, "pang");
 
-		pattern.put("^nang-" + vowel, "nang-");
-		pattern.put("^nan" + assimilation_ng_to_n, "nan");
-		pattern.put("^nam" + assimilation_ng_to_m, "nam");
-		pattern.put("^nang" + consonant, "nang");
+		patternReplace.put("^napa.*", "napa");
+		patternReplace.put("^paka.*", "paka");
+		patternReplace.put("^paki.*", "paki");
+		patternReplace.put("^pala.*", "pala");
+		patternReplace.put("^papa.*", "papa");
 
-		pattern.put("^mapa.*", "mapa");
-		pattern.put("^naka.*", "naka");
-		pattern.put("^naki.*", "naki");
+		patternReplace.put("^nang-" + vowel, "nang-");
+		patternReplace.put("^nan" + assimilation_ng_to_n, "nan");
+		patternReplace.put("^nam" + assimilation_ng_to_m, "nam");
+		patternReplace.put("^nang" + consonant, "nang");
 
-		pattern.put("^mang-" + vowel, "mang-");
-		pattern.put("^man" + assimilation_ng_to_n, "man");
-		pattern.put("^mam" + assimilation_ng_to_m, "mam");
-		pattern.put("^mang" + consonant, "mang");
+		patternReplace.put("^mapa.*", "mapa");
+		patternReplace.put("^naka.*", "naka");
+		patternReplace.put("^naki.*", "naki");
 
-		pattern.put("^maka.*", "maka");
-		pattern.put("^maki.*", "maki");
-		pattern.put("^mala.*", "mala");
+		patternReplace.put("^mang-" + vowel, "mang-");
+		patternReplace.put("^man" + assimilation_ng_to_n, "man");
+		patternReplace.put("^mam" + assimilation_ng_to_m, "mam");
+		patternReplace.put("^mang" + consonant, "mang");
 
-		pattern.put("^ipag-" + vowel, "ipag-");
-		pattern.put("^ipag" + consonant, "ipag");
+		patternReplace.put("^makaka.*", "makaka");
+		patternReplace.put("^maka.*", "maka");
 
-		pattern.put("^tig-" + vowel, "tig-");
-		pattern.put("^tig" + consonant, "tig");
+		patternReplace.put("^makiki.*", "makiki");
+		patternReplace.put("^maki.*", "maki");
 
-		pattern.put("^tag-" + vowel, "tag-");
-		pattern.put("^tag" + consonant, "tag");
+		patternReplace.put("^mala.*", "mala");
 
-		pattern.put("^pag-" + vowel, "pag-");
-		pattern.put("^pag" + consonant, "pag");
+		patternReplace.put("^ipag-" + vowel, "ipag-");
+		patternReplace.put("^ipag" + consonant, "ipag");
 
-		pattern.put("^nai.*", "nai");
+		patternReplace.put("^tig-" + vowel, "tig-");
+		patternReplace.put("^tig" + consonant, "tig");
 
-		pattern.put("^may-" + vowel, "may-");
-		pattern.put("^may" + consonant, "may");
+		patternReplace.put("^tag-" + vowel, "tag-");
+		patternReplace.put("^tag" + consonant, "tag");
 
-		pattern.put("^nag-" + vowel, "nag-");
-		pattern.put("^nag" + consonant, "nag");
+		patternReplace.put("^pag-" + vowel, "pag-");
+		patternReplace.put("^pag" + consonant, "pag");
 
-		pattern.put("^mai.*", "mai");
+		patternReplace.put("^nai.*", "nai");
 
-		pattern.put("^mag-" + vowel, "mag-");
-		pattern.put("^mag" + consonant, "mag");
+		patternReplace.put("^may-" + vowel, "may-");
+		patternReplace.put("^may" + consonant, "may");
 
-		pattern.put("^ika.*", "ika");
-		pattern.put("^ipa.*", "ipa");
-		pattern.put("^isa.*", "isa");
+		patternReplace.put("^nag-" + vowel, "nag-");
+		patternReplace.put("^nag" + consonant, "nag");
 
-		pattern.put("^di-.*", "di-");
+		patternReplace.put("^mai.*", "mai");
+
+		patternReplace.put("^mag-" + vowel, "mag-");
+		patternReplace.put("^mag" + consonant, "mag");
+
+		patternReplace.put("^ika.*", "ika");
+		patternReplace.put("^ipa.*", "ipa");
+		patternReplace.put("^isa.*", "isa");
+
+		patternReplace.put("^di-.*", "di-");
+
+		if (!Configuration.LIGHT_STEMMER) {
+			patternReplace.put("^ma.*", "ma");
+			patternReplace.put("^na.*", "na");
+			patternReplace.put("^pa.*", "pa");
+			patternReplace.put("^um.*", "um");
+		}
 	}
 
 	public LinkedHashMap<String, String> getPrefixes() {
-		return pattern;
+		return patternReplace;
 	}
 }

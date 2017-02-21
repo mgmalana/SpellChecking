@@ -8,6 +8,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import training.affixes.CustomizedRule;
+import training.affixes.Infixes;
+import training.affixes.PartialReduplication;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
 import utlity.Configuration;
@@ -15,9 +18,15 @@ import utlity.Configuration;
 public class Stemmer {
 
 	File file = null;
-	private LinkedHashMap<String, String> prefixList = null;
-	private HashMap<String, String> suffixList = null;
+	// FOR CODE-SWITCHING PART
 	private Collection<String> prefixListValues = null;
+
+	private CustomizedRule customRule = new CustomizedRule();
+
+	private LinkedHashMap<String, String> prefixList = null;
+	private LinkedHashMap<String, String> suffixList = null;
+	private LinkedHashMap<String, String> infixList = null;
+	private PartialReduplication partialRedup = null;
 
 	public Stemmer(Prefixes prefixList, Suffixes suffixList) {
 		this.prefixList = prefixList.getPrefixes();
@@ -25,38 +34,40 @@ public class Stemmer {
 		this.prefixListValues = this.prefixList.values();
 	}
 
+	public Stemmer(Prefixes prefixList, Suffixes suffixList, Infixes infixList, PartialReduplication partialRedup) {
+		this(prefixList, suffixList);
+		this.infixList = infixList.getInfixes();
+		this.partialRedup = partialRedup;
+	}
+
 	public LinkedHashSet<String> stemWordList(Set<String> wordList) {
 		LinkedHashSet<String> stemmedList = new LinkedHashSet<>();
-
-		for (String inflected : wordList)
-			stemmedList.add(stemming(inflected));
-
+		// int counter = 0;
+		for (String inflected : wordList) {
+			// counter++;
+			String stemmed = stemming(inflected);
+			stemmedList.add(stemmed);
+			/*
+			 * if (counter < 1000) System.out.println(inflected + " --- " +
+			 * stemmed);
+			 */
+		}
 		return stemmedList;
 	}
 
 	public String stemming(String input) {
 
+		customRule.testCustomeRules(input);
+		input = customRule.getWord();
+
 		if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
 			return input;
 
-		for (String pattern : prefixList.keySet()) {
-			String temp = input;
-			if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
-				return input;
-
-			if (input.matches((pattern))) {
-				input = input.replaceFirst(prefixList.get(pattern), "");
-
-			}
-
-			// Return 'yung OLD STRING kapag AFTER STEMMING ay naging less than
-			// MINIMUM_WORD_LENGTH ito
-			if (input.length() < Configuration.MINIMUM_WORD_LENGTH) {
-				input = temp;
-			}
-
-		}
-
+		//
+		//
+		// SUFFIXES STRIPPING
+		//
+		//
 		for (String pattern : suffixList.keySet()) {
 
 			if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
@@ -76,22 +87,93 @@ public class Stemmer {
 				}
 				switch (findReplace.length) {
 				case 2:
-					input = input.replaceFirst(findReplace[0], findReplace[1]);
+					// input = input.replaceFirst(findReplace[0],
+					// findReplace[1]);
+					input = replaceLast(input, findReplace[0], findReplace[1]);
 					break;
 				case 1:
-					input = input.replaceFirst(findReplace[0], "");
+					// input = input.replaceFirst(findReplace[0], "");
+					input = replaceLast(input, findReplace[0], "");
 					break;
 				}
 
 				// Return 'yung OLD STRING kapag AFTER STEMMING ay naging less
-				// than 4 ito
-				if (input.length() <= Configuration.MINIMUM_WORD_LENGTH) {
+				// than 4 ito or FIRST TWO LETTERS are CONSONANT
+				if (input.length() <= Configuration.MINIMUM_WORD_LENGTH
+						|| ((input.matches("[^aeiou][^aeiou].*")) && input.length() <= 5)) {
 					input = temp;
 				}
-
 			}
 		}
 
+		//
+		//
+		// PREFIX STRIPPING
+		//
+		//
+		for (String pattern : prefixList.keySet()) {
+
+			if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
+				return input;
+
+			if (input.matches((pattern))) {
+				String temp = input;
+				input = input.replaceFirst(prefixList.get(pattern), "");
+
+				// Return 'yung OLD STRING kapag AFTER STEMMING ay naging less
+				// than 4 ito or FIRST TWO LETTERS are CONSONANT
+				if (input.length() <= Configuration.MINIMUM_WORD_LENGTH
+						|| ((input.matches("[^aeiou][^aeiou].*")) && input.length() <= 5)) {
+					input = temp;
+				}
+			}
+		}
+
+		if (!Configuration.LIGHT_STEMMER) {
+
+			//
+			//
+			// INFIXES STRIPPING
+			//
+			//
+			for (String pattern : infixList.keySet()) {
+				if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
+					return input;
+
+				if (input.matches((pattern))) {
+					String temp1 = input;
+					String infixValue = infixList.get(pattern);
+					input = input.replaceFirst(pattern, infixValue);
+
+					// Return 'yung OLD STRING kapag AFTER STEMMING ay naging
+					// less
+					// than 4 ito or FIRST TWO LETTERS are CONSONANT
+					if (input.length() <= Configuration.MINIMUM_WORD_LENGTH
+							|| ((input.matches("[^aeiou][^aeiou].*")) && input.length() <= 5)) {
+						input = temp1;
+					}
+				}
+			}
+			//
+			//
+			// PARTIAL REDUPLICATION STRIPPING
+			//
+			//
+			if (input.length() <= Configuration.MINIMUM_WORD_LENGTH)
+				return input;
+			partialRedup.testPartialRedup(input);
+			input = partialRedup.getPartialRedup();
+		}
+
+		//
+		//
+		// CLEANER
+		//
+		//
+		String clean = customRule.changeU2O(input);
+		if (!clean.equals("")) {
+			return clean;
+		}
 		return input;
 	}
 
@@ -102,5 +184,9 @@ public class Stemmer {
 				return true;
 
 		return false;
+	}
+
+	private static String replaceLast(String text, String regex, String replacement) {
+		return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
 	}
 }

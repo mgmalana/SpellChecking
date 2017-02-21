@@ -7,11 +7,14 @@ public class MainTest {
 		String input = "ang mga bata na magagaling, na.";
 
 		System.out.println("STEMMER");
-		 StemmerTester.testStemmer();
+		// StemmerTester.testStemmer();
 		System.out.println();
 		System.out.println("LANGUAGE MODEL");
 		// LangModelTester.testGenerateLangModel();
-		//TokenizeTest.tokenize(input);
+		// TokenizeTest.tokenize(input);
+		System.out.println();
+		System.out.println("CORRECTION TEST");
+		CorrectionTest.testCorrection();
 
 	}
 

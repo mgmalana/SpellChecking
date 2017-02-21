@@ -2,7 +2,7 @@ package tokenizer;
 
 public class Tokenizer {
 
-	String[] delimiters = { ".", ",", "!" };
+	String[] delimiters = { ".", ",", "!", "*#" };
 
 	public String[] tokenize(String input) {
 

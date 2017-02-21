@@ -8,6 +8,8 @@ import java.util.Set;
 
 import training.IOFile;
 import training.Stemmer;
+import training.affixes.Infixes;
+import training.affixes.PartialReduplication;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
 import utlity.Configuration;
@@ -15,15 +17,25 @@ import utlity.Configuration;
 public class StemmerTester {
 
 	public static void testStemmer() {
+		Stemmer stemmer = null;
+
 		Prefixes prefixList = new Prefixes();
 		Suffixes suffixList = new Suffixes();
-		int counter = 0;
-		Stemmer stemmer = new Stemmer(prefixList, suffixList);
 
-		HashMap<String, String> wordStem = AffixesTestList.testPrefix();
+		Infixes infixList = null;
+		PartialReduplication redup = null;
+
+		int counter = 0;
+		if (Configuration.LIGHT_STEMMER)
+			stemmer = new Stemmer(prefixList, suffixList);
+		else {
+			infixList = new Infixes();
+			redup = new PartialReduplication();
+			stemmer = new Stemmer(prefixList, suffixList, infixList, redup);
+		}
+		HashMap<String, String> wordStem = AffixesTestList.testSmallData();
 
 		for (String word : wordStem.keySet()) {
-
 			String stemmed = stemmer.stemming(word);
 
 			if (stemmed.equalsIgnoreCase(wordStem.get(word))) {
@@ -41,7 +53,7 @@ public class StemmerTester {
 
 		IOFile ioFile = new IOFile();
 		Set<String> stemmedList = stemmer.stemWordList(wordStem.keySet());
-		
+
 		/**
 		 * STORE GENERATED STEMMED WORD LIST
 		 */
