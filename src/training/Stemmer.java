@@ -15,6 +15,11 @@ import training.affixes.Prefixes;
 import training.affixes.Suffixes;
 import utlity.Configuration;
 
+/**
+ * 
+ * The stemming system of the spell checker.
+ * 
+ **/
 public class Stemmer {
 
 	File file = null;

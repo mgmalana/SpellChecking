@@ -10,7 +10,6 @@ import corrector.MergeCorrection;
 import corrector.SplitCorrection;
 import detector.DictLookUp;
 import detector.NGramStatistics;
-import tokenizer.Tokenizer;
 import training.DAWG;
 import training.IOFile;
 import training.LanguageModel;
@@ -21,107 +20,143 @@ import training.affixes.Prefixes;
 import training.affixes.Suffixes;
 import utlity.Configuration;
 import utlity.Logger;
+import utlity.Tokenizer;
 
+/**
+ * 
+ * The controller of the spell checking system.
+ * 
+ **/
 public class Main {
 
 	public static void main(String[] args) {
+
+		/*** resource controller (read/write). */
 		IOFile ioFile = new IOFile();
+		/*** stemmer of the system. */
 		Stemmer stemmer = null;
 
+		/*** list of pre-defined prefixes in the system */
 		Prefixes prefixList = new Prefixes();
+		/*** list of pre-defined suffixes in the system */
 		Suffixes suffixList = new Suffixes();
 
+		/*** list of pre-defined suffixes in the system */
 		Infixes infixList = null;
+		/*** list of pre-defined partial reduplication rules in the system */
 		PartialReduplication redupRuleList = null;
 
-		if (Configuration.LIGHT_STEMMER)
+		// Check what stemmer will be used in the system.
+		if (Configuration.LIGHT_STEMMER) {
+			// LIGHT_STEMMER = TRUE in the configuration
 			stemmer = new Stemmer(prefixList, suffixList);
-		else {
+		} else {
+			// LIGHT_STEMMER = FALSE in the configuration
 			infixList = new Infixes();
 			redupRuleList = new PartialReduplication();
 			stemmer = new Stemmer(prefixList, suffixList, infixList, redupRuleList);
 		}
-		// GET FILIPINO DICT
+
+		/*** Filipino dictionary */
 		LinkedHashSet<String> dictionary = ioFile.readResource(Configuration.FILIPINO_DICT);
 
-		// GET THE STEM OF EACH WORD
+		/*** Stemmed Filipino words */
 		dictionary = stemmer.stemWordList(dictionary);
 
-		// STORE GENERATED STEMMED WORD LIST
-		ioFile.trainResource(Configuration.STEMMED_FILE, Configuration.OVERWRITE_FILE, dictionary);
+		/*** Store generated stemmed Filipino words */
+		ioFile.writeResource(Configuration.STEMMED_FILE, Configuration.OVERWRITE_FILE, dictionary);
 
-		// GET STEMMED LANGUAGE MODEL
+		/*** Stemmed Filipino language model */
 		LanguageModel languageModel = new LanguageModel(dictionary, Configuration.nGram);
 		dictionary = languageModel.generateNGram();
 
-		// STORE GENERATED N-GRAM LIST
-		ioFile.trainResource(Configuration.NGRAM_FILE, Configuration.OVERWRITE_FILE, dictionary);
+		/*** Store generated stemmed Filipino language model */
+		ioFile.writeResource(Configuration.NGRAM_FILE, Configuration.OVERWRITE_FILE, dictionary);
 		dictionary = null;
 
-		// CREATE AUTOMATON REPRESENTATION OF DICTIOANRY
+		/*** Automaton representation of English and Filipino dictionary */
 		MDAG engDict = DAWG.dictAutomaton(Configuration.ENGLISH_DICT);
 		MDAG filiDict = DAWG.dictAutomaton(Configuration.FILIPINO_DICT);
 
-		// DICTIONARY LOOK-UP AND N-GRAM APPROACH
+		/*** ERROR DETECTION: Dictionary look-up and N-gram approach */
 		DictLookUp dictLookUp = new DictLookUp(engDict, filiDict);
 		NGramStatistics nGramStats = new NGramStatistics(Configuration.NGRAM_FILE);
 
-		// ERROR CORRECTION VARIABLES
+		/*** ERROR CORRECTION: Merge-split */
 		SplitCorrection splitCorrector = new SplitCorrection(filiDict);
 		MergeCorrection mergeCorrector = new MergeCorrection(stemmer);
+
+		/*** List of candidate suggestions */
 		LinkedHashSet<String> candidateSuggestions = null;
 
+		/*** TESTING: Logger for testing */
 		Logger logger = new Logger();
+		/*** sentence counter */
 		int sentenceNumber = 0;
 
-		// TEST SENTENCE
+		/*** TESTING: sentences */
 		ArrayList<String> document = new ArrayList<>();
+
 		document.add("Ang mga bata na magaganda.*#");
 		document.add("Sila rin ay bata na magaganda.*#");
 		document.add("mag laro ay palang na magaganda.*#");
-		document.add("Mg-texts laro Magelan ay magagandangbabae na magaganda.*#");
+		document.add("Mg-texts laro Magelan ay magagandangbabae na magagnda text subtexts.*#");
 
+		/*** Tokenizer to separate marks with words. */
 		Tokenizer tokenizer = new Tokenizer();
 		for (String sentence : document) {
 			sentenceNumber++;
 
-			// TOKENIZATION OF INPUT SENTENCES
+			/*** Array of words after tokenization. */
 			String[] words = tokenizer.tokenize(sentence);
 
 			// words.length-1 = remove the marker '*#'
 			for (int wordCounter = 0; wordCounter < words.length - 1; wordCounter++) {
 
-				// GET CURRENT WORD IN THE SENTENCE
+				/*** Current word in the sentence. */
 				String cWord = words[wordCounter];
 				candidateSuggestions = new LinkedHashSet<>();
-				
-				// SKIP IF THE WORD IS A PUNCTUATION MARKS
+
+				// Skipping the owrd if it is a punctuation mark/ proper noun.
 				if (tokenizer.isDelimeters(cWord) || tokenizer.isProperNoun(cWord)) {
 					if (Configuration.LOGGER) {
-						
 						candidateSuggestions.add("Delimeter / ProperNoun");
 						logger.log(sentenceNumber, sentence, cWord, false, candidateSuggestions);
 					}
 					continue;
 				}
-				// ---------------
-				// ---------------
-				// ERROR DETECTION
-				// ---------------
-				// ---------------
 
-				// WORD ITSELF: DICTIONARY LOOKUP
+				// ---------------------------------------------
+				// ---------------------------------------------
+				// ERROR DETECTION
+				// ---------------------------------------------
+				// ---------------------------------------------
+
+				/***
+				 * state(true/false) whether the word is present or absent in
+				 * the dictionary.
+				 */
 				boolean inDictionary = dictLookUp.checkDict(cWord);
 
-				// CODE-SWTICHING CASE: GET THE STEM OF THE WORD AND DICTIONARY
-				// LOOK-UP
+				// INFLECTED CASE:
+				// Stem the word and do a dictionary look-up
+				if (!inDictionary) {
+					// STEM OF THE FILIPINO WORD
+					String word = stemmer.stemming(cWord);
+					inDictionary = dictLookUp.checkFiliDict(word);
+				}
+
+				// CODE-SWITCHING:
+				// Check if the cWord is not in dictionary and contains hyphen
 				if (!inDictionary && cWord.contains("-")) {
-					// STEM OF THE CODE-SWITCHING
+
+					/*** prefix and borrowed word */
 					String[] codeSwitchWord = cWord.split("-");
 
 					boolean isPrefix = stemmer.isPrefix(codeSwitchWord[0]);
 					boolean isEngWord = dictLookUp.checkEngDict(codeSwitchWord[1]);
 
+					// Check if prefix is the only wrong
 					if (isEngWord && !isPrefix) {
 						if (Configuration.LOGGER) {
 							candidateSuggestions.add("Wrong prefix of the word");
@@ -129,44 +164,41 @@ public class Main {
 						}
 						continue;
 					}
+
 					inDictionary = (isPrefix && isEngWord);
 				}
 
-				// INFLECTED CASE: GET THE STEM OF THE WORD AND DICTIONARY
-				// LOOK-UP
-				if (!inDictionary) {
-					// STEM OF THE FILIPINO WORD
-					String word = stemmer.stemming(cWord);
-					inDictionary = dictLookUp.checkFiliDict(word);
-				}
-
-				// NO WORD IN DICTIONARY: N-GRAM
+				// N-GRAM:
+				// Check the N-gram statistics if cWord do not exists in the
+				// language.
 				if (!inDictionary && !stemmer.isPrefix(cWord)) {
 					inDictionary = nGramStats.hasHighNGramStatistics(cWord);
 				}
 
-				// ---------------
-				// ---------------
-				// ERROR CORRECTION FOR
-				// THE MISPPLED WORD
-				// ---------------
-				// ---------------
+				// ---------------------------------------------
+				// ---------------------------------------------
+				// ERROR CORRECTION FOR THE MISPPLED WORD
+				// ---------------------------------------------
+				// ---------------------------------------------
 
+				/*** Next word in the sentence. */
 				String nWord = words[wordCounter + 1];
-				
+
 				if (!inDictionary) {
-					// SPLIT CORRECTION
+					/*** Add split correction suggestions */
 					candidateSuggestions = splitCorrector.splitSuggestion(cWord);
 
-					// MERGE CORRECTION
+					/*** Add merge correction suggestions */
 					String mergeCorrectionSuggestion = mergeCorrector.setConsecutiveWords(cWord, nWord);
 					if (!mergeCorrectionSuggestion.equals("")) {
 						wordCounter++;
 						candidateSuggestions.add(mergeCorrectionSuggestion);
 					}
 
-					// AUTOMATON CORRECTION
+					// Check if no suggestion produced by split-merge
+					// correction.
 					if (candidateSuggestions.size() == 0) {
+						/*** Add automaton correction suggestions */
 						candidateSuggestions.addAll(LevenshteinAutomaton.iterativeFuzzySearch(2, cWord, filiDict));
 					}
 				}
@@ -176,7 +208,8 @@ public class Main {
 			}
 		}
 
-		ioFile.trainResource(Configuration.LOG_FILE, Configuration.OVERWRITE_FILE, logger.getLog());
+		// FOR TESTING: Log output of test sentence
+		ioFile.writeResource(Configuration.LOG_FILE, Configuration.OVERWRITE_FILE, logger.getLog());
 	}
 
 }

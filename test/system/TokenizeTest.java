@@ -1,6 +1,6 @@
 package system;
 
-import tokenizer.Tokenizer;
+import utlity.Tokenizer;
 
 public class TokenizeTest {
 

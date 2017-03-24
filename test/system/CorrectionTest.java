@@ -7,7 +7,6 @@ import com.BoxOfC.MDAG.MDAG;
 
 import corrector.MergeCorrection;
 import corrector.SplitCorrection;
-import tokenizer.Tokenizer;
 import training.DAWG;
 import training.Stemmer;
 import training.affixes.Infixes;
@@ -15,6 +14,7 @@ import training.affixes.PartialReduplication;
 import training.affixes.Prefixes;
 import training.affixes.Suffixes;
 import utlity.Configuration;
+import utlity.Tokenizer;
 
 public class CorrectionTest {
 

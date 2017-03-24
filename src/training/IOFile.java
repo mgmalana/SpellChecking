@@ -10,6 +10,11 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * 
+ * Control reading and writing of resource
+ * 
+ **/
 public class IOFile {
 
 	public String getResource() {
@@ -21,7 +26,7 @@ public class IOFile {
 		return f.exists();
 	}
 
-	public void trainResource(String fileName, boolean toOverwrite, Set<String> wordList) {
+	public void writeResource(String fileName, boolean toOverwrite, Set<String> wordList) {
 		String filePath = getResource() + fileName;
 		boolean isFileExists = isFileExists(filePath);
 		if ((isFileExists && toOverwrite) || !isFileExists) {

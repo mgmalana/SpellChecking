@@ -10,7 +10,7 @@ public class Configuration {
 	public final static boolean OVERWRITE_FILE = true;
 	public final static boolean VERBOSE = false;
 	public final static boolean LOGGER = true;
-	public final static boolean LIGHT_STEMMER = true;
+	public final static boolean LIGHT_STEMMER = false;
 	
 	public final static String LOG_FILE = "log.txt";
 	public final static String STEMMED_FILE = "stem.txt";
