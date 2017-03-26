@@ -57,7 +57,7 @@ public class StemmerTester {
 		/**
 		 * STORE GENERATED STEMMED WORD LIST
 		 */
-		ioFile.writeResource(Configuration.STEMMED_FILE, Configuration.OVERWRITE_FILE, stemmedList);
+		ioFile.writeResource(Configuration.STEMMED_FILE, stemmedList);
 		String lastModified = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss")
 				.format(new Date(new File(ioFile.getResource() + Configuration.STEMMED_FILE).lastModified()));
 

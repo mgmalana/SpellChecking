@@ -26,19 +26,17 @@ public class IOFile {
 		return f.exists();
 	}
 
-	public void writeResource(String fileName, boolean toOverwrite, Set<String> wordList) {
+	public void writeResource(String fileName, Set<String> wordList) {
 		String filePath = getResource() + fileName;
-		boolean isFileExists = isFileExists(filePath);
-		if ((isFileExists && toOverwrite) || !isFileExists) {
-			try (PrintWriter out = new PrintWriter(new File(filePath))) {
-				for (String word : wordList)
-					out.println(word);
-			} catch (FileNotFoundException e) {
-				System.out.println("File not found");
-				e.printStackTrace();
-			}
-		} else
-			System.out.println("NOT MODIFIED: " + fileName);
+
+		try (PrintWriter out = new PrintWriter(new File(filePath))) {
+			for (String word : wordList)
+				out.println(word);
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found");
+			e.printStackTrace();
+		}
+
 	}
 
 	public LinkedHashSet<String> readResource(String fileName) {

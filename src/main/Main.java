@@ -56,24 +56,28 @@ public class Main {
 			redupRuleList = new PartialReduplication();
 			stemmer = new Stemmer(prefixList, suffixList, infixList, redupRuleList);
 		}
+		
+		// Configuration.TRAIN = TRUE - train the system again
+		// Configuration.TRAIN = FALSE - used the existing system
+		// DO: Handling whether the resources exists is not yet implemented.
+		if (Configuration.TRAIN) {
+			/*** Filipino dictionary */
+			LinkedHashSet<String> dictionary = ioFile.readResource(Configuration.FILIPINO_DICT);
 
-		/*** Filipino dictionary */
-		LinkedHashSet<String> dictionary = ioFile.readResource(Configuration.FILIPINO_DICT);
+			/*** Stemmed Filipino words */
+			dictionary = stemmer.stemWordList(dictionary);
 
-		/*** Stemmed Filipino words */
-		dictionary = stemmer.stemWordList(dictionary);
+			/*** Store generated stemmed Filipino words */
+			ioFile.writeResource(Configuration.STEMMED_FILE, dictionary);
 
-		/*** Store generated stemmed Filipino words */
-		ioFile.writeResource(Configuration.STEMMED_FILE, Configuration.OVERWRITE_FILE, dictionary);
+			/*** Stemmed Filipino language model */
+			LanguageModel languageModel = new LanguageModel(dictionary, Configuration.nGram);
+			dictionary = languageModel.generateNGram();
 
-		/*** Stemmed Filipino language model */
-		LanguageModel languageModel = new LanguageModel(dictionary, Configuration.nGram);
-		dictionary = languageModel.generateNGram();
-
-		/*** Store generated stemmed Filipino language model */
-		ioFile.writeResource(Configuration.NGRAM_FILE, Configuration.OVERWRITE_FILE, dictionary);
-		dictionary = null;
-
+			/*** Store generated stemmed Filipino language model */
+			ioFile.writeResource(Configuration.NGRAM_FILE, dictionary);
+			dictionary = null;
+		}
 		/*** Automaton representation of English and Filipino dictionary */
 		MDAG engDict = DAWG.dictAutomaton(Configuration.ENGLISH_DICT);
 		MDAG filiDict = DAWG.dictAutomaton(Configuration.FILIPINO_DICT);
@@ -95,13 +99,8 @@ public class Main {
 		int sentenceNumber = 0;
 
 		/*** TESTING: sentences */
-		ArrayList<String> document = new ArrayList<>();
-
-		document.add("Ang mga bata na magaganda.*#");
-		document.add("Sila rin ay bata na magaganda.*#");
-		document.add("mag laro ay palang na magaganda.*#");
-		document.add("Mg-texts laro Magelan ay magagandangbabae na magagnda text subtexts.*#");
-
+		LinkedHashSet<String> document = ioFile.readResource(Configuration.TEST_INPUT);
+		
 		/*** Tokenizer to separate marks with words. */
 		Tokenizer tokenizer = new Tokenizer();
 		for (String sentence : document) {
@@ -121,7 +120,7 @@ public class Main {
 				if (tokenizer.isDelimeters(cWord) || tokenizer.isProperNoun(cWord)) {
 					if (Configuration.LOGGER) {
 						candidateSuggestions.add("Delimeter / ProperNoun");
-						logger.log(sentenceNumber, sentence, cWord, false, candidateSuggestions);
+						logger.log(sentenceNumber, sentence, cWord, true, candidateSuggestions);
 					}
 					continue;
 				}
@@ -209,7 +208,7 @@ public class Main {
 		}
 
 		// FOR TESTING: Log output of test sentence
-		ioFile.writeResource(Configuration.LOG_FILE, Configuration.OVERWRITE_FILE, logger.getLog());
+		ioFile.writeResource(Configuration.LOG_FILE, logger.getLog());
 	}
 
 }

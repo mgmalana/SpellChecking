@@ -1,41 +1,43 @@
 
 1-------S-E-N-T-E-N-C-E-------
-Ang mga bata na magaganda.*#
-1:  word(1): ang true 
+Ang mga bata na magaganda.
+1:  word(1): Ang true [Delimeter / ProperNoun, ]
 1:  word(2): mga true 
 1:  word(3): bata true 
 1:  word(4): na true 
 1:  word(5): magaganda true 
-1:  word(6): . false [Delimeter / ProperNoun, ]
+1:  word(6): . true [Delimeter / ProperNoun, ]
 
 2-------S-E-N-T-E-N-C-E-------
-Sila rin ay bata na magaganda.*#
-2:  word(7): sila true 
+Sila rin ay bata na magaganda.
+2:  word(7): Sila true [Delimeter / ProperNoun, ]
 2:  word(8): rin true 
 2:  word(9): ay true 
 2:  word(10): bata true 
 2:  word(11): na true 
 2:  word(12): magaganda true 
-2:  word(13): . false [Delimeter / ProperNoun, ]
+2:  word(13): . true [Delimeter / ProperNoun, ]
 
 3-------S-E-N-T-E-N-C-E-------
-mag laro ay palang na magaganda.*#
+mag laro ay palang na magaganda.
 3:  word(14): mag false [maglaro, ]
 3:  word(15): ay true 
 3:  word(16): palang true 
 3:  word(17): na true 
 3:  word(18): magaganda true 
-3:  word(19): . false [Delimeter / ProperNoun, ]
+3:  word(19): . true [Delimeter / ProperNoun, ]
 
 4-------S-E-N-T-E-N-C-E-------
-Mg-texts laro Magelan ay magagandangbabae na magagnda text subtexts.*#
-4:  word(20): mg-texts false [Wrong prefix of the word, ]
-4:  word(21): laro true 
-4:  word(22): Magelan false [Delimeter / ProperNoun, ]
-4:  word(23): ay true 
-4:  word(24): magagandangbabae false [magagandang babae, ]
-4:  word(25): na true 
-4:  word(26): magagnda false [matanda, mapaganda, magtinda, magpaganda, maghanda, maganda, magagawa, gaganda, ]
-4:  word(27): text false [tela, ]
-4:  word(28): subtexts true 
-4:  word(29): . false [Delimeter / ProperNoun, ]
+Tayo ay mg-texts laro Magelan ay magagandangbabae na magagnda text subtexts.
+4:  word(20): Tayo true [Delimeter / ProperNoun, ]
+4:  word(21): ay true 
+4:  word(22): mg-texts false [Wrong prefix of the word, ]
+4:  word(23): laro true 
+4:  word(24): Magelan true [Delimeter / ProperNoun, ]
+4:  word(25): ay true 
+4:  word(26): magagandangbabae false [magagandang babae, ]
+4:  word(27): na true 
+4:  word(28): magagnda false [matanda, mapaganda, magtinda, magpaganda, maghanda, maganda, magagawa, gaganda, ]
+4:  word(29): text false [tela, ]
+4:  word(30): subtexts true 
+4:  word(31): . true [Delimeter / ProperNoun, ]

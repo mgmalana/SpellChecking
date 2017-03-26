@@ -2,17 +2,14 @@ package utlity;
 
 public class Tokenizer {
 
-	String[] delimiters = { ".", ",", "!", "*#" };
+	String[] delimiters = { ".", ",", "!"};
 
 	public String[] tokenize(String input) {
 
 		for (String mark : delimiters)
-			input = input.replace(mark, " " + mark);
+			input = input.replace(mark, " " + mark + " *#");
 
-		String[] tokenized = input.split(" ");
-		tokenized[0] = tokenized[0].toLowerCase();
-
-		return tokenized;
+		return input.split(" ");
 	}
 
 	public boolean isDelimeters(String word) {
