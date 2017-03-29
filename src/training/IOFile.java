@@ -18,7 +18,7 @@ import java.util.Set;
 public class IOFile {
 
 	public String getResource() {
-		return (System.getProperty("user.dir") + "\\resource\\");
+		return (System.getProperty("user.dir") + File.separator + "resource" + File.separator);
 	}
 
 	public boolean isFileExists(String fileName) {
