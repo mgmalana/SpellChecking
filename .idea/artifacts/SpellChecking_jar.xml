@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SpellChecking:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SpellChecking_jar</output-path>
+    <root id="archive" name="SpellChecking.jar">
+      <element id="module-output" name="SpellChecking" />
+      <element id="library" level="project" name="LevenshteinAutomaton" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Lib/LevenshteinAutomaton.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Lib/MDAG.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

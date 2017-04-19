@@ -1,9 +1,6 @@
 <component name="libraryTable">
   <library name="LevenshteinAutomaton">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Lib/LevenshteinAutomaton.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Lib/MDAG.jar!/" />
-    </CLASSES>
+    <CLASSES />
     <JAVADOC />
     <SOURCES />
   </library>

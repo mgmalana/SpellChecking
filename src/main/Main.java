@@ -29,8 +29,15 @@ import utlity.Tokenizer;
  **/
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
+		/*** TESTING: sentences */
+		IOFile ioFile = new IOFile();
+		LinkedHashSet<String> document = ioFile.readResource(Configuration.TEST_INPUT);
+		spellCheck(document.toArray(new String[document.size()]));
+	}
 
+	public static void spellCheck(String[] document){
 		/*** resource controller (read/write). */
 		IOFile ioFile = new IOFile();
 		/*** stemmer of the system. */
@@ -56,7 +63,7 @@ public class Main {
 			redupRuleList = new PartialReduplication();
 			stemmer = new Stemmer(prefixList, suffixList, infixList, redupRuleList);
 		}
-		
+
 		// Configuration.TRAIN = TRUE - train the system again
 		// Configuration.TRAIN = FALSE - used the existing system
 		// DO: Handling whether the resources exists is not yet implemented.
@@ -98,9 +105,6 @@ public class Main {
 		/*** sentence counter */
 		int sentenceNumber = 0;
 
-		/*** TESTING: sentences */
-		LinkedHashSet<String> document = ioFile.readResource(Configuration.TEST_INPUT);
-		
 		/*** Tokenizer to separate marks with words. */
 		Tokenizer tokenizer = new Tokenizer();
 		for (String sentence : document) {
@@ -210,5 +214,4 @@ public class Main {
 		// FOR TESTING: Log output of test sentence
 		ioFile.writeResource(Configuration.LOG_FILE, logger.getLog());
 	}
-
 }
